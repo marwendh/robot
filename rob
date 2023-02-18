@@ -1,0 +1,85 @@
+#define ticks_per_rev 200
+#define wheel_rayon 30
+#define center_distance
+#define kd 0.01
+#define kp 1
+#define ki 0.5
+#define pi 3.14159
+
+#define encoderRa 1
+#define encoderRb 2
+#define encoderLa 7
+#define encoderLb 8
+
+#define MR1 3
+#define MR2 5
+#define ML1 6
+#define ML2 9
+
+long counterR=0;
+long counterL=0;
+float wheel_perimeter= 2*pi*wheel_rayon;
+int a=0;
+int b=0;
+  
+void setup()
+{
+  attachInterrupt(digitalPinToInterrupt(encoderLa),ReadEncoderLa,CHANGE);
+  attachInterrupt(digitalPinToInterrupt(encoderRb),ReadEncoderLb,CHANGE);
+  attachInterrupt(digitalPinToInterrupt(encoderRa),ReadEncoderRa,CHANGE);
+  attachInterrupt(digitalPinToInterrupt(encoderRb),ReadEncoderRb,CHANGE);   
+}
+
+void loop()
+{
+  
+  
+  
+}
+void ReadEncoderLa(){
+  int a= digitalRead(encoderLa);
+  int b= digitalRead(encoderLb);
+  if(a^b){
+    counterL ++;
+  }
+  else{
+    counterL--;
+  }
+}
+void ReadEncoderLb(){
+  int a= digitalRead(encoderLa);
+  int b= digitalRead(encoderLb);
+  if(!(a^b)){
+    counterL ++;
+  }
+  else{
+    counterL--;
+  }
+}
+
+void ReadEncoderRa(){
+  int a= digitalRead(encoderRa);
+  int b= digitalRead(encoderRb);
+  if(a^b){
+    counterR++;
+  }
+  else{
+    counterR--;
+  }
+}
+
+void ReadEncoderRb(){
+  int a= digitalRead(encoderRa);
+  int b= digitalRead(encoderRb);
+  if(!(a^b)){
+    counterR ++;
+  }
+  else{
+    counterR--;
+  }
+}
+
+float tickstomm(float ticks){
+  float tickmm=wheel_perimeter/ticks_per_rev;
+  return ticks* tickmm;
+  }
