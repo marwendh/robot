@@ -5,6 +5,7 @@
 #define kp 1
 #define ki 0.5
 #define pi 3.14159
+#define sampleTime 10
 
 #define encoderRa 1
 #define encoderRb 2
@@ -19,6 +20,15 @@
 long counterR=0;
 long counterL=0;
 float wheel_perimeter= 2*pi*wheel_rayon;
+float setpoint = 200;
+float error=0;
+float prevError=0;
+float Integral=0;
+float Derivate=0;
+int output=0;
+unsigned long now=0;
+unsigned long lastTime=0;
+unsigned long dt=0;
 int a=0;
 int b=0;
   
@@ -88,48 +98,26 @@ const float kp = 1.0; // Proportional constant
 const float ki = 0.1; // Integral constant
 const float kd = 0.05; // Derivative constant
 
-// Define variables for the PID controller
-float setpoint = 200.0; // Desired speed in RPM
-float input = 0.0; // Actual speed in RPM
-float output = 0.0; // Output signal to the motor
-float last_input = 0.0; // Previous speed measurement
-float integral_term = 0.0; // Integral term of the controller
-unsigned long last_time = 0; // Last time the PID loop was run
-unsigned long sample_time = 10; // Sampling time in milliseconds
 
-// Define pins for the motor driver
-int motor_pin1 = 9;
-int motor_pin2 = 10;
 
-void setup() {
-  // Set the motor driver pins as outputs
-  pinMode(motor_pin1, OUTPUT);
-  pinMode(motor_pin2, OUTPUT);
-}
 
-void loop() {
-  // Calculate the elapsed time since the last loop
-  unsigned long now = millis();
-  unsigned long elapsed_time = now - last_time;
 
-  // Only run the PID loop if the sampling time has elapsed
-  if (elapsed_time >= sample_time) {
-    // Read the current speed of the motor (in RPM)
-    input = analogRead(A0); // Assume the motor speed is measured with an analog input
 
-    // Calculate the error between the setpoint and the actual speed
-    float error = setpoint - input;
 
-    // Calculate the integral term of the controller
-    integral_term += error * elapsed_time;
 
-    // Calculate the derivative term of the controller
-    float derivative_term = (input - last_input) / elapsed_time;
 
-    // Calculate the output signal to the motor
-    output = kp * error + ki * integral_term + kd * derivative_term;
+void moveMR(){
+   now = millis();
+   dt= now - last_time;
+  if (dt>= sampleTime) {
+    float error = setpoint - counterR;
 
-    // Update the motor driver pins based on the output signal
+   Integral += error * dt;
+
+   Derivative= (error-prevError) /dt;
+
+    output = kp * error + ki *Integral+ kd * Derivate;
+
     if (output > 0.0) {
       // Set the motor direction to forward
       digitalWrite(motor_pin1, HIGH);
@@ -149,6 +137,5 @@ void loop() {
     last_input = input;
     last_time = now;
   }
-}
-
+ }
 
