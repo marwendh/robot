@@ -1,11 +1,10 @@
 #define ticks_per_rev 200
 #define wheel_rayon 30
-#define center_distance
+#define center_distance 100
 #define kd 0.01
 #define kp 1
 #define ki 0.5
-#define pi 3.14159
-#define sampleTime 10
+#define pi 3.14159265
 
 #define encoderRa 1
 #define encoderRb 2
@@ -20,12 +19,13 @@
 long counterR=0;
 long counterL=0;
 float wheel_perimeter= 2*pi*wheel_rayon;
+float tickmm=wheel_perimeter/ticks_per_rev;
 float setpoint = 200;
 float error=0;
 float prevError=0;
 float Integral=0;
 float Derivate=0;
-int output=0;
+float output=0;
 unsigned long now=0;
 unsigned long lastTime=0;
 unsigned long dt=0;
@@ -46,6 +46,7 @@ void loop()
   
   
 }
+
 void ReadEncoderLa(){
   int a= digitalRead(encoderLa);
   int b= digitalRead(encoderLb);
@@ -56,6 +57,7 @@ void ReadEncoderLa(){
     counterL--;
   }
 }
+
 void ReadEncoderLb(){
   int a= digitalRead(encoderLa);
   int b= digitalRead(encoderLb);
@@ -89,53 +91,67 @@ void ReadEncoderRb(){
   }
 }
 
+
 float tickstomm(float ticks){
-  float tickmm=wheel_perimeter/ticks_per_rev;
   return ticks* tickmm;
   }
-// Define constants for the PID controller
-const float kp = 1.0; // Proportional constant
-const float ki = 0.1; // Integral constant
-const float kd = 0.05; // Derivative constant
+  
+float mmtoticks(float mm){
+  return mm/tickmm;
+  }
 
 
-
-
-
-
-
-
-
-void moveMR(){
-   now = millis();
-   dt= now - last_time;
-  if (dt>= sampleTime) {
-    float error = setpoint - counterR;
-
-   Integral += error * dt;
-
-   Derivative= (error-prevError) /dt;
-
-    output = kp * error + ki *Integral+ kd * Derivate;
-
-    if (output > 0.0) {
-      // Set the motor direction to forward
-      digitalWrite(motor_pin1, HIGH);
-      digitalWrite(motor_pin2, LOW);
-    } else {
-      // Set the motor direction to backward
-      digitalWrite(motor_pin1, LOW);
-      digitalWrite(motor_pin2, HIGH);
-      // Invert the output signal to make it positive for the motor driver
-      output = -output;
-    }
-
-    // Set the motor speed based on the output signal
-    analogWrite(motor_pin1, output);
-
-    // Remember the current speed measurement and the last loop time
-    last_input = input;
-    last_time = now;
+void moveMR(float setpoint){
+  now = millis();
+  dt= now - lastTime;
+  error = setpoint - counterR;
+  Integral += error * dt;
+  Derivative= (error-prevError) /dt;
+  output = kp * error + ki *Integral+ kd * Derivate;
+  if (ouput>255){output=255;}
+  if (ouput<-255){output=-255;}
+  
+  if (output>0)
+  {
+    analogWrite(MR1,abs(output)); 
+    analogWrite(MR2,0); 
+  }
+  else
+  {
+    analogWrite(MR2,abs(output)); 
+    analogWrite(MR1,0); 
+  }
+  
+  
+  prevError =error;
+  lastTime =now;
+  }
+ }
+ 
+ 
+ 
+ void moveML(float setpoint){
+  now = millis();
+  dt= now - lastTime;
+  error = setpoint - counterL;
+  Integral += error * dt;
+  Derivative= (error-prevError) /dt;
+  output = kp * error + ki *Integral+ kd * Derivate;
+  if (ouput>255){output=255;}
+  if (ouput<-255){output=-255;}
+  
+  if (output>0)
+  {
+    analogWrite(ML1,abs(output)); 
+    analogWrite(ML2,0); 
+  }
+  else
+  {
+    analogWrite(ML2,abs(output)); 
+    analogWrite(ML1,0); 
+  }
+  prevError =error;
+  lastTime =now;
   }
  }
 
