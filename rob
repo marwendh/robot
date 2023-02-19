@@ -106,10 +106,10 @@ void moveMR(float setpoint){
   dt= now - lastTime;
   error = setpoint - counterR;
   Integral += error * dt;
-  Derivative= (error-prevError) /dt;
+  Derivate= (error-prevError) /dt;
   output = kp * error + ki *Integral+ kd * Derivate;
-  if (ouput>255){output=255;}
-  if (ouput<-255){output=-255;}
+  if (output>255){output=255;}
+  if (output<-255){output=-255;}
   
   if (output>0)
   {
@@ -125,7 +125,6 @@ void moveMR(float setpoint){
   
   prevError =error;
   lastTime =now;
-  }
  }
  
  
@@ -135,10 +134,10 @@ void moveMR(float setpoint){
   dt= now - lastTime;
   error = setpoint - counterL;
   Integral += error * dt;
-  Derivative= (error-prevError) /dt;
+  Derivate= (error-prevError) /dt;
   output = kp * error + ki *Integral+ kd * Derivate;
-  if (ouput>255){output=255;}
-  if (ouput<-255){output=-255;}
+  if (output>255){output=255;}
+  if (output<-255){output=-255;}
   
   if (output>0)
   {
@@ -152,6 +151,5 @@ void moveMR(float setpoint){
   }
   prevError =error;
   lastTime =now;
-  }
+ 
  }
-
