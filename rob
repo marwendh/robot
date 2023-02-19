@@ -102,54 +102,56 @@ float mmtoticks(float mm){
 
 
 void moveMR(float setpoint){
-  now = millis();
-  dt= now - lastTime;
-  error = setpoint - counterR;
-  Integral += error * dt;
-  Derivate= (error-prevError) /dt;
-  output = kp * error + ki *Integral+ kd * Derivate;
-  if (output>255){output=255;}
-  if (output<-255){output=-255;}
-  
-  if (output>0)
-  {
-    analogWrite(MR1,abs(output)); 
-    analogWrite(MR2,0); 
-  }
-  else
-  {
-    analogWrite(MR2,abs(output)); 
-    analogWrite(MR1,0); 
-  }
-  
-  
-  prevError =error;
-  lastTime =now;
- }
+ while (((tickstomm(counterR)+tickstomm(counterL)/2)  < setpoint ){
+    now = millis();
+    dt= now - lastTime;
+    error = setpoint - tickstomm(counterR);
+    Integral += error * dt;
+    Derivate= (error-prevError) /dt;
+    output = kp * error + ki *Integral+ kd * Derivate;
+    if (output>255){output=255;}
+    if (output<-255){output=-255;}
+
+    if (output>0)
+    {
+      analogWrite(MR1,abs(output)); 
+      analogWrite(MR2,0); 
+    }
+    else
+    {
+      analogWrite(MR2,abs(output)); 
+      analogWrite(MR1,0); 
+    }
+
+
+    prevError =error;
+    lastTime =now;
+ }}
  
  
  
  void moveML(float setpoint){
-  now = millis();
-  dt= now - lastTime;
-  error = setpoint - counterL;
-  Integral += error * dt;
-  Derivate= (error-prevError) /dt;
-  output = kp * error + ki *Integral+ kd * Derivate;
-  if (output>255){output=255;}
-  if (output<-255){output=-255;}
-  
-  if (output>0)
-  {
-    analogWrite(ML1,abs(output)); 
-    analogWrite(ML2,0); 
-  }
-  else
-  {
-    analogWrite(ML2,abs(output)); 
-    analogWrite(ML1,0); 
-  }
-  prevError =error;
-  lastTime =now;
- 
+  while (((tickstomm(counterR)+tickstomm(counterL)/2)  < setpoint ){
+    now = millis();
+    dt= now - lastTime;
+    error = setpoint - tickstomm(counterL);
+    Integral += error * dt;
+    Derivate= (error-prevError) /dt;
+    output = kp * error + ki *Integral+ kd * Derivate;
+    if (output>255){output=255;}
+    if (output<-255){output=-255;}
+
+    if (output>0)
+    {
+      analogWrite(ML1,abs(output)); 
+      analogWrite(ML2,0); 
+    }
+    else
+    {
+      analogWrite(ML2,abs(output)); 
+      analogWrite(ML1,0); 
+    }
+    prevError =error;
+    lastTime =now;
+ }
  }
