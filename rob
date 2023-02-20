@@ -100,8 +100,10 @@ float mmtoticks(float mm){
   return mm/tickmm;
   }
 
+
+
 void moveRobot(float setpoint){
-  while (((tickstomm(counterR)+tickstomm(counterL)/2)  < setpoint ){
+  while (((tickstomm(counterR)+tickstomm(counterL))/2)  < setpoint ){
       moveMR(setpoint);
       moveML(setpoint);  
   }
@@ -162,11 +164,31 @@ void moveMR(float setpoint){
  
 void  tournerDroit(){
     float theta = 0;
-    while (theta<
-
-
-
-
-
-
+    float deltaTheta=0;
+    float prevR=tickstomm(counterR);
+    float prevL=tickstomm(counterL);
+    float distance=(pi/2)*(center_distance);
+    while ((abs(theta))<(pi/2)){
+        moveML(distance);
+        moveMR(-distance);
+        deltaTheta=((counterR-prevR)-(counterL-prevL))/(2*center_distance);
+        prevL=counterL;
+        prevR=counterR; 
+        theta+=deltaTheta; 
+    }
+}
+void  tournerGauche(){
+    float theta = 0;
+    float deltaTheta=0;
+    float prevR=tickstomm(counterR);
+    float prevL=tickstomm(counterL);
+    float distance=(pi/2)*(center_distance);
+    while ((abs(theta))<(pi/2)){
+        moveML(-distance);
+        moveMR(distance);
+        deltaTheta=((counterR-prevR)-(counterL-prevL))/(2*center_distance);
+        prevL=counterL;
+        prevR=counterR; 
+        theta+=deltaTheta; 
+    }   
 }
