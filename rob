@@ -100,9 +100,15 @@ float mmtoticks(float mm){
   return mm/tickmm;
   }
 
+void moveRobot(float setpoint){
+  while (((tickstomm(counterR)+tickstomm(counterL)/2)  < setpoint ){
+      moveMR(setpoint);
+      moveML(setpoint);  
+  }
 
+
+}
 void moveMR(float setpoint){
- while (((tickstomm(counterR)+tickstomm(counterL)/2)  < setpoint ){
     now = millis();
     dt= now - lastTime;
     error = setpoint - tickstomm(counterR);
@@ -126,12 +132,11 @@ void moveMR(float setpoint){
 
     prevError =error;
     lastTime =now;
- }}
+ }
  
  
  
  void moveML(float setpoint){
-  while (((tickstomm(counterR)+tickstomm(counterL)/2)  < setpoint ){
     now = millis();
     dt= now - lastTime;
     error = setpoint - tickstomm(counterL);
@@ -154,4 +159,14 @@ void moveMR(float setpoint){
     prevError =error;
     lastTime =now;
  }
- }
+ 
+void  tournerDroit(){
+    float theta = 0;
+    while (theta<
+
+
+
+
+
+
+}
