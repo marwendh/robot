@@ -149,7 +149,7 @@ void moveMR(float setpoint){
     error = setpoint - tickstomm(counterR);
     Integral += error * dt;
     Derivate= (error-prevError) /dt;
-    output = kp * error + ki *Integral+ kd * Derivate;
+    output = kpR * error + kiR *Integral+ kdR * Derivate;
     if (output>255){output=255;}
     if (output<-255){output=-255;}
 
@@ -177,7 +177,7 @@ void moveMR(float setpoint){
     error = setpoint - tickstomm(counterL);
     Integral += error * dt;
     Derivate= (error-prevError) /dt;
-    output = kp * error + ki *Integral+ kd * Derivate;
+    output = kpL * error + kiL *Integral+ kdL * Derivate;
     if (output>255){output=255;}
     if (output<-255){output=-255;}
 
