@@ -1,3 +1,4 @@
+#include <TimerOne.h>
 #define ticks_per_rev 200
 #define wheel_rayon 30
 #define center_distance 100
@@ -18,6 +19,9 @@
 
 long counterR=0;
 long counterL=0;
+long prevCounterR=0;
+long prevCounterL=0;
+float vitess=0;
 float wheel_perimeter= 2*pi*wheel_rayon;
 float tickmm=wheel_perimeter/ticks_per_rev;
 float setpoint = 200;
@@ -32,19 +36,33 @@ unsigned long dt=0;
 int a=0;
 int b=0;
   
+TimerOne timer;    //   INTERRUPTION PROBLEMS MAY OCCUR 
+
 void setup()
 {
+  timer.initialize(100000);
+  timer.attachInterrupt(calculVitesse);
   attachInterrupt(digitalPinToInterrupt(encoderLa),ReadEncoderLa,CHANGE);
   attachInterrupt(digitalPinToInterrupt(encoderRb),ReadEncoderLb,CHANGE);
   attachInterrupt(digitalPinToInterrupt(encoderRa),ReadEncoderRa,CHANGE);
   attachInterrupt(digitalPinToInterrupt(encoderRb),ReadEncoderRb,CHANGE);   
-}
+  timer.start();
+ }
 
 void loop()
 {
   
   
   
+}
+
+void calculVitesse(){
+  float vitesseR=(tickstomm(counterR-prevCounterR))/0.1;
+  float vitesseL=(tickstomm(counterL-prevCounterL))/0.1;
+  vitesse =(vitesseR+vitessL)/2;  
+  prevCounterR=counterR;
+  prevCounterL=counterL;
+
 }
 
 void ReadEncoderLa(){
