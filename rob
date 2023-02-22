@@ -11,6 +11,10 @@
 #define kiL 0.5
 #define pi 3.14159265
 
+#define laser 4
+#define trig 12
+#define echo 13
+
 #define encoderRa 1
 #define encoderRb 2
 #define encoderLa 7
@@ -21,10 +25,12 @@
 #define ML1 6
 #define ML2 9
 
+
 long counterR=0;
 long counterL=0;
 long prevCounterR=0;
 long prevCounterL=0;
+float distancePlaquemm=0;
 float vitess=0;
 float wheel_perimeter= 2*pi*wheel_rayon;
 float tickmm=wheel_perimeter/ticks_per_rev;
@@ -48,6 +54,8 @@ void setup()
   pinMode(encoderRb,INPUT);
   pinMode(encoderLa,INPUT);
   pinMode(encoderLb,INPUT);
+  pinMode(laser,OUTPUT);
+  digitalWrite(laser,LOW);
   pinMode(MR1,OUTPUT);
   pinMode(ML1,OUTPUT);
   pinMode(MR2,OUTPUT);
@@ -224,4 +232,19 @@ void  tournerGauche(){
         prevR=counterR; 
         theta+=deltaTheta; 
     }   
+}
+
+void laser(){
+  digitalWrite(laser,HIGH);
+  delay(1000);
+  digitalWrite(laser,LOW);
+}
+
+
+void ultrason(){
+  digitalWrite(trig,HIGH);
+  delay(10);
+  digitalWrite(trig,LOW);s
+  long mes=pulseIn(echo,HIGH);
+  distancePlaquemm= (mes * 0.34) / 2;
 }
