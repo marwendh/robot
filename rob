@@ -1,10 +1,14 @@
 #include <TimerOne.h>
+
 #define ticks_per_rev 200
 #define wheel_rayon 30
 #define center_distance 100
-#define kd 0.01
-#define kp 1
-#define ki 0.5
+#define kdR 0.01
+#define kpR 1
+#define kiR 0.5
+#define kdL 0.01
+#define kpL 1
+#define kiL 0.5
 #define pi 3.14159265
 
 #define encoderRa 1
@@ -40,13 +44,25 @@ TimerOne timer;    //   INTERRUPTION PROBLEMS MAY OCCUR
 
 void setup()
 {
-  timer.initialize(100000);
-  timer.attachInterrupt(calculVitesse);
+  pinMode(encoderRa,INPUT);
+  pinMode(encoderRb,INPUT);
+  pinMode(encoderLa,INPUT);
+  pinMode(encoderLb,INPUT);
+  pinMode(MR1,OUTPUT);
+  pinMode(ML1,OUTPUT);
+  pinMode(MR2,OUTPUT);
+  pinMode(ML2,OUTPUT);
+  pinMode(encoderRa,INPUT);
+  pinMode(encoderRa,INPUT);
   attachInterrupt(digitalPinToInterrupt(encoderLa),ReadEncoderLa,CHANGE);
   attachInterrupt(digitalPinToInterrupt(encoderRb),ReadEncoderLb,CHANGE);
   attachInterrupt(digitalPinToInterrupt(encoderRa),ReadEncoderRa,CHANGE);
-  attachInterrupt(digitalPinToInterrupt(encoderRb),ReadEncoderRb,CHANGE);   
+  attachInterrupt(digitalPinToInterrupt(encoderRb),ReadEncoderRb,CHANGE); 
+
+  timer.initialize(100000);
+  timer.attachInterrupt(calculVitesse);  
   timer.start();
+
  }
 
 void loop()
@@ -62,7 +78,6 @@ void calculVitesse(){
   vitesse =(vitesseR+vitessL)/2;  
   prevCounterR=counterR;
   prevCounterL=counterL;
-
 }
 
 void ReadEncoderLa(){
